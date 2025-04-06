@@ -1,118 +1,117 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, {useState} from 'react'
+import Task from './components/task'
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const App = () => {
+   
+  const [task, setTask] = useState<string>("");
+  const [taskItems, setTaskItems] = useState<string[]>([]);
+  
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  const handleAddText = () => {
+      Keyboard.dismiss();
+      setTaskItems([...taskItems, task])
+      setTask("");
+  }
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const completeTask = (index: any) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
+  }
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
+    <View style={styles.container}>
+
+      <View style={styles.tasksWrapper}>
+        <Text style={styles.sectionTitle}>Today's Tasks</Text>
+        
+        <ScrollView style={styles.items}>
+
           {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+            taskItems.map((item, index) => {
+              return( 
+                <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                   <Task key={index} text={item}/>
+                </TouchableOpacity>
+              )
+            })
+          } 
+        </ScrollView>
+
+      </View>
+
+         <KeyboardAvoidingView 
+           behavior={Platform.OS === "ios" ? "padding" : "height"}
+           style={styles.writeTaskWrapper}
+         >
+           <TextInput style={styles.input} placeholder={'Write a task'} value={task ?? ""} onChangeText={text => setTask(text)}/>
+
+           <TouchableOpacity onPress={()=> handleAddText()}>
+            <View style={styles.addWrapper}>
+              <Text style={styles.addText}> + </Text>
+            </View>
+           </TouchableOpacity>
+         </KeyboardAvoidingView>
+
+          
+ 
     </View>
-  );
+  )
 }
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+export default App
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#e0f6f7',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+    tasksWrapper:{
+      paddingTop: 43,
+      paddingHorizontal: 20,
+    },
+    sectionTitle:{
+      fontSize:24,
+      fontWeight:'bold',   
+      textAlign: 'center',
+      color: '#9a7777'
 
-export default App;
+    },
+    items:{
+       marginTop: 30,
+
+    },
+    writeTaskWrapper: {
+      position: 'absolute',
+      bottom: 30,
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems:'center'
+    },
+    input: {
+      paddingVertical: 15,
+      paddingHorizontal: 15,
+      backgroundColor: '#FFF',
+      borderRadius: 60,
+      borderColor: 'black',
+      borderWidth: 1,
+      width: 250
+    },
+    addWrapper: {
+      width: 50,
+      height:50,
+      backgroundColor: '#FFF',
+      borderRadius: 60,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: 'black',
+      borderWidth: 1,
+    },
+    addText: {
+     fontWeight:'bold'
+    },
+
+
+});
