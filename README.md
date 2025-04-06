@@ -1,3 +1,10 @@
+
+This is a cross-platform mobile application project, I used React-Native framework to create it. The main project files App.tsx and task.js is written with Typescript. 
+
+You can add your daily tasks, by writing them down below then click on + . When you complete your task you can delete it from your list by just pressing on it. It's easy to use and functional for organising your schedule.
+
+How to run the project on React-Native:
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
